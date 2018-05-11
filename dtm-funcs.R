@@ -101,3 +101,13 @@ build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
                        colors = brewer.pal(10, "Dark2"))    # Plot results in a word cloud 
   title(sub = title)     # title for the wordcloud display
 } 
+
+clean_text <- function(text)
+{
+  text  =  str_replace_all(text, "<.*?>", " ")   # drop html junk
+  
+  text = text %>%   
+  str_replace_all("\\\\s+", " ")  
+  
+  return(text) 
+}
