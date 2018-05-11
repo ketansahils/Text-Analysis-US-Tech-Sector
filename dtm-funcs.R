@@ -74,14 +74,14 @@ phrase_detector <- function(doc_df, noun=TRUE){
   return(b0)
 }
 
-build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
+build_wordcloudk <- function(label,count,scalex,scaley,max.words,title)
 {
   wordcloud::wordcloud(label, count,     # words, their freqs 
                        scale = c(scalex, scaley),     # range of word sizes
-                       min.freq=0,                     # min.freq of words to consider
+                       min.freq=2,                     # min.freq of words to consider
                        max.words = 150,
                        random.order=FALSE,
                        rot.per=0.35,
-                       colors = RColorBrewer::brewer.pal(10, "Dark2"))    # Plot results in a word cloud 
+                       colors = brewer.pal(8, "Dark2"))    # Plot results in a word cloud 
   title(sub = title)     # title for the wordcloud display
 } 
