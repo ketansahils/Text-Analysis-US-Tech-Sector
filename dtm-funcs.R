@@ -74,39 +74,30 @@ phrase_detector <- function(doc_df, noun=TRUE){
   return(b0)
 }
 
-build_wordcloud <- function(dtm, 
-                            max.words1=150,     # max no. of words to accommodate
-                            min.freq=5,       # min.freq of words to consider
-                            plot.title="wordcloud"){          # write within double quotes
+py.annotate <- function(corpus, ner = FALSE){
   
-  require(wordcloud)
-  if (ncol(dtm) > 20000){   # if dtm is overly large, break into chunks and solve
-    
-    tst = round(ncol(dtm)/100)  # divide DTM's cols into 100 manageble parts
-    a = rep(tst,99)
-    b = cumsum(a);rm(a)
-    b = c(0,b,ncol(dtm))
-    
-    ss.col = c(NULL)
-    for (i in 1:(length(b)-1)) {
-      tempdtm = dtm[,(b[i]+1):(b[i+1])]
-      s = colSums(as.matrix(tempdtm))
-      ss.col = c(ss.col,s)
-      print(i)      } # i loop ends
-    
-    tsum = ss.col
-    
-  } else { tsum = apply(dtm, 2, sum) }
+  require(reticulate)
+  nltk = import("nltk")   # Import nltk
   
-  tsum = tsum[order(tsum, decreasing = T)]       # terms in decreasing order of freq
-  head(tsum);    tail(tsum)
+  clean_corpus = clean_text(corpus)
   
-  # windows()  # Opens a new plot window when active
-  wordcloud(names(tsum), tsum,     # words, their freqs 
-            scale = c(3.5, 0.5),     # range of word sizes
-            min.freq,                     # min.freq of words to consider
-            max.words = max.words1,       # max #words
-            colors = brewer.pal(8, "Dark2"))    # Plot results in a word cloud 
-  title(sub = plot.title)     # title for the wordcloud display
+  if (ner == "TRUE") {text_list = lapply(clean_corpus, function(x) {py.ner(x)})} else { 
+    text_list = lapply(clean_corpus, function(x) {py.postag(x)})}
   
-}
+  for (doc in 1:length(text_list)){ text_list[[doc]]$doc_num = doc    }
+  text_df = bind_rows(text_list)
+  text_annotated_df = text_df %>% postag_desc(penn_treebank)
+  
+  return(text_annotated_df) }    # py.annotate() func ends
+
+build_wordcloud <- function(label,count,scalex, scaley, max.words,title)
+{
+  wordcloud::wordcloud(label, count,     # words, their freqs 
+                       scale = c(1, 0.5),     # range of word sizes
+                       min.freq=0,                     # min.freq of words to consider
+                       max.words = 150,
+                       random.order=FALSE,
+                       rot.per=0.35,
+                       colors = brewer.pal(10, "Dark2"))    # Plot results in a word cloud 
+  title(sub = title)     # title for the wordcloud display
+} 
