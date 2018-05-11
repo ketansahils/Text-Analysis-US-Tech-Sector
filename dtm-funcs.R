@@ -88,12 +88,12 @@ py.annotate <- function(corpus, ner = FALSE){
   text_df = bind_rows(text_list)
   text_annotated_df = text_df %>% postag_desc(penn_treebank)
   
-  return(text_annotated_df) }    # py.annotate() func ends
+  return(text_annotated_df) }
 
-build_wordcloud <- function(label,count,scalex, scaley, max.words,title)
+build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
 {
   wordcloud::wordcloud(label, count,     # words, their freqs 
-                       scale = c(1, 0.5),     # range of word sizes
+                       scale = c(scalex, scaley),     # range of word sizes
                        min.freq=0,                     # min.freq of words to consider
                        max.words = 150,
                        random.order=FALSE,
