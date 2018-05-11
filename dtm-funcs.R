@@ -74,22 +74,6 @@ phrase_detector <- function(doc_df, noun=TRUE){
   return(b0)
 }
 
-py.annotate <- function(corpus, ner = FALSE){
-  
-  require(reticulate)
-  nltk = import("nltk")   # Import nltk
-  
-  clean_corpus = clean_text(corpus)
-  
-  if (ner == "TRUE") {text_list = lapply(clean_corpus, function(x) {py.ner(x)})} else { 
-    text_list = lapply(clean_corpus, function(x) {py.postag(x)})}
-  
-  for (doc in 1:length(text_list)){ text_list[[doc]]$doc_num = doc    }
-  text_df = bind_rows(text_list)
-  text_annotated_df = text_df %>% postag_desc(penn_treebank)
-  
-  return(text_annotated_df) }
-
 build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
 {
   wordcloud::wordcloud(label, count,     # words, their freqs 
@@ -101,13 +85,3 @@ build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
                        colors = brewer.pal(10, "Dark2"))    # Plot results in a word cloud 
   title(sub = title)     # title for the wordcloud display
 } 
-
-clean_text <- function(text)
-{
-  text  =  stringr::str_replace_all(text, "<.*?>", " ")   # drop html junk
-  
-  text = text %>%   
-  stringr::str_replace_all("\\\\s+", " ")  
-  
-  return(text) 
-}
