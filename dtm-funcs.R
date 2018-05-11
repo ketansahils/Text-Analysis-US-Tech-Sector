@@ -104,10 +104,10 @@ build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
 
 clean_text <- function(text)
 {
-  text  =  str_replace_all(text, "<.*?>", " ")   # drop html junk
+  text  =  stringr::str_replace_all(text, "<.*?>", " ")   # drop html junk
   
   text = text %>%   
-  str_replace_all("\\\\s+", " ")  
+  stringr::str_replace_all("\\\\s+", " ")  
   
   return(text) 
 }
