@@ -82,6 +82,6 @@ build_wordcloud <- function(label,count,scalex,scaley,max.words,title)
                        max.words = 150,
                        random.order=FALSE,
                        rot.per=0.35,
-                       colors = brewer.pal(10, "Dark2"))    # Plot results in a word cloud 
+                       colors = RColorBrewer::brewer.pal(10, "Dark2"))    # Plot results in a word cloud 
   title(sub = title)     # title for the wordcloud display
 } 
